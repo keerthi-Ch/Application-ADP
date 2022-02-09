@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        li {
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class=col>
+        <h2>Result of Calculations </h2>
+        <ul id=messages>
+        </ul>
+    </div>
+
+    <script>
+        function subscribe(es, ul) {
+            es.onmessage = function (e) {
+                var data = JSON.parse(e.data);
+                var li = document.createElement("LI");
+                if (data.status == 599) {
+                    var error = document.createElement("SPAN");
+                    error.innerHTML = `<strong>Error:</strong> ${data.error}<br>`;
+                    li.appendChild(error);
+                } else {
+                    var id = document.createElement("SPAN");
+                    id.innerHTML = `<strong>Event:</strong> ${data.id}<br>`;
+                    li.appendChild(id);
+
+                    var operation = document.createElement("SPAN");
+                    operation.innerHTML = `<strong>Operation:</strong> ${data.operation}<br>`;
+                    li.appendChild(operation);
+
+                    var left = document.createElement("SPAN");
+                    left.innerHTML = `<strong>Left:</strong> ${data.left}<br>`;
+                    li.appendChild(left);
+
+                    var right = document.createElement("SPAN");
+                    right.innerHTML = `<strong>Right:</strong> ${data.right}<br>`;
+                    li.appendChild(right);
+
+                    var result = document.createElement("SPAN");
+                    result.innerHTML = `<strong>Result:</strong> ${data.result}<br>`;
+                    li.appendChild(result);
+
+                    var status = document.createElement("SPAN");
+                    status.innerHTML = `<strong>Status:</strong> ${data.status}<br>`;
+                    li.appendChild(status);
+                }
+                ul.appendChild(li);
+                window.scrollTo(0, document.body.scrollHeight);
+            };
+        }
+
+        subscribe(new EventSource('/events'), document.getElementById('messages'));
+    </script>
+</body>
+
+</html>
